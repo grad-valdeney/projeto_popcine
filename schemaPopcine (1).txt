@@ -1,0 +1,278 @@
+//required: ["titulo", "sinopse", "duracao", "dataEstreia", "classificacao", "genero", "elenco", "diretor"],
+////////////////////////////////////////////
+let schemaMovie = {
+    required: ["titulo", "sinopse", "duracao", "dataEstreia", "classificacao", "genero", "elenco", "diretor"],
+    properties: {
+        "titulo": {
+            bsonType: "string",
+            description: "must be a string and required"
+        },
+        "sinopse": {
+            bsonType: "string",
+            description: "must be a string and required"
+
+        },
+        "duracao": {
+            bsonType: "int",
+            description: "must be an int value and required"        
+        },
+        "dataEstreia": {
+            bsonType: "date",
+            description: "must be a date type and required"        
+        },
+        "classificacao": {
+            bsonType: "string",
+            description: "must be a string and required",
+            enum: [
+                "Livre", "10 anos", "12 anos", 
+                "14 anos", "16 anos", " 18 anos", 
+            ]        
+
+        },
+        "orcamento": {
+            bsonType: "double",
+            description: "must be a double value"
+        },
+        "bilheteria": {
+            bsonType: "double",
+            description: "must be a double value"
+            
+        },
+        "genero": {
+            bsonType: "array",
+            description: "must be a string and required"
+            
+        },
+        "elenco": {
+            bsonType: "array",
+            description: "must be a string array and required"
+
+        },
+        "diretor": {
+            bsonType: "string",
+            description: "must be a string and required"
+        }
+
+    }
+}
+db.createCollection("movie", {validator: {$jsonSchema: schemaMovie}})
+//index de genero
+
+db.movie.insertOne({
+    "titulo": "Viúva Negra",
+    "sinopse": "Natasha Romanoff, também conhecida como Viúva Negra, confronta o lado mais sombrio de sua história quando surge uma perigosa conspiração ligada ao seu passado. Perseguida por uma força implacável disposta a tudo para destruí-la, Natasha precisa agora lidar com seu passado como espiã e com as relações que deixou para trás muito antes de se tornar uma Vingadora.",
+    "duracao": 135,
+    "dataEstreia": new Date("2021-07-08"),
+    "classificacao": "12 anos",
+    "orcamento": Double(200000000),
+    "bilheteria": Double(369811000),
+    "genero": ["Ação", "Suspense"],
+    "elenco": ["Natasha Romanoff"],
+    "diretor": "Dwayne Jhonson"
+});
+
+////////////////////////////////////////////
+
+
+//
+/* db.cliente.drop()
+let schemaCliente = null     */
+
+let schemaCliente = {
+    required: ["nome", "dataNascimento", "login"],
+    properties: {
+        "nome": {
+            bsonType: "string",
+            description: "must be a string and required"
+        },
+        "dataNascimento": {
+            bsonType: "date",
+            description: "must be a date type and required"  
+        },
+       "login": {
+            bsonType: "objectId",
+            description: "must be a objectId and required"  
+        }
+
+    }
+}
+
+db.createCollection("cliente", {validator: {$jsonSchema: schemaCliente}});
+
+//com objectId primeiro ObjectId("61fdc04f619b0ff9db732e9c")
+///////////////////////////////////
+db.cliente.insertOne({
+    "nome": "rui",
+    "dataNascimento": new Date(1996,28,02),
+    "login": ObjectId("61fdc04f619b0ff9db732e9c")
+})
+
+
+let schemaLogin = {
+    required: ["email", "senha"],
+    properties: {
+        "email": {
+            bsonType: "string",
+            description: "must be a string and required"
+        },
+        "senha": {
+            bsonType: "string",
+            description: "must be a string type and required"  
+        }
+    }
+}
+
+
+db.login.insertOne({
+    "email": "sruy19@gmail.com",
+    "senha": "123456789"
+})
+/////////////////////////////////////////////////
+db.createCollection("login", {validator: {$jsonSchema: schemaLogin}});
+
+let schemaIngresso = {
+    required: ["dataCompra", "formaPagamento", "tipoIngresso", "nomeFilme", "poltrona", "sala", "sessao"],
+    properties: {
+        "dataCompra": {
+            bsonType: "date",
+            description: "must be a date type and required"
+        },
+        "formaPagamento": {
+            bsonType: "string",
+            description: "must be a string type and required",
+            enum : ["Boleto", "Pix", "Cartão Crédito", "Cartão Débito"]
+        },
+        "tipoIngresso": {
+            bsonType: "string",
+            description: "must be a string type and required",
+            enum : ["Meia", "Inteira"]
+        },
+        "nomeFilme": {
+            bsonType: "string",
+            description: "must be a string type and required",
+        },
+        "poltrona": {
+            bsonType: "string",
+            description: "must be a string type and required"
+        },
+        "sala": {
+            bsonType: "string",
+            description: "must be a string type and required"
+        },
+        "sessao": {
+            bsonType: "date",
+            description: "must be date type and required"
+        }
+
+    }
+}
+
+db.createCollection("ingresso", {validator: {$jsonSchema: schemaIngresso}});
+
+let schemaSala = {
+    required: ["nomeSala", "capacidade"],
+    properties: {
+        "nomeSala": {
+            bsonType: "string",
+            description: "must be a string and required"
+        },
+        "capacidade": {
+            bsonType: "int",
+            description: "must be a int and required"
+
+        },
+
+    }
+}
+
+db.createCollection("sala", {validator: {$jsonSchema: schemaSala}});
+
+let schemaSessao = {
+    required: ["filme", "dataHora", "nomeSala"],
+    properties: {
+        "filme": {
+            bsonType: "string",
+            description: "must be a string and required"
+        },
+        "dataHora": {
+            bsonType: "date",
+            description: "must be a date type and required"
+
+        },
+        "nomeSala": {
+            bsonType: "string",
+            description: "must be a string and required"
+        }
+    }
+}
+
+db.createCollection("sessao", {validator: {$jsonSchema: schemaSessao}});
+
+let schemaLegenda = {
+    required: ["tradutores", "idiomaLegenda", "nomeFilme"],
+    properties: {
+        "tradutores": {
+            bsonType: ["string"],
+            description: "must be a array string and required"
+        },
+        "idiomaLegenda": {
+            bsonType: ["string"],
+            description: "must be a array string and required"
+        },
+        "idiomaFilme": {
+            bsonType: ["string"],
+            description: "must be a array string and required"
+        },
+        "nomeFilme": {
+            bsonType: "string",
+            description: "must be a string and required"
+
+        }
+    }
+}
+
+db.createCollection("legenda", {validator: {$jsonSchema: schemaLegenda}});
+
+let schemaEmBreve = {
+    required: ["nomeFilme", "sinopse", "trailer", "dataEstreia"],
+    properties: {
+        "nomeFilme": {
+            bsonType: "string",
+            description: "must be a string and required"
+        },
+        "sinopse": {
+            bsonType: "string",
+            description: "must be a string and required"
+        },
+        "trailer": {
+            bsonType: "string",
+            description: "must be a string and required"
+        },
+        "dataEstreia": {
+            bsonType: "date",
+            description: "must be a date type and required"
+
+        },
+        "duracao": {
+            bsonType: "int",
+            description: "must be a int and required"
+        },
+        "atores": {
+            bsonType: ["string"],
+            description: "must be a array string and required"
+        }
+    }
+}
+
+db.createCollection("embreve", {validator: {$jsonSchema: schemaEmBreve}});
+
+let schemaDate = {
+    properties: {
+        "data": {
+            bsonType: "date"
+        }
+    }
+}
+
+db.createCollection("dataHora", {validator: {$jsonSchema: schemaDate}});
+
